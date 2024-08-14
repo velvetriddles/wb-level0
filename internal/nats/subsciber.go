@@ -7,6 +7,7 @@ import (
 
 	"log/slog"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/nats-io/nats.go"
 	"github.com/velvetriddles/wb-level0/internal/domain"
 	"github.com/velvetriddles/wb-level0/internal/service"
@@ -34,20 +35,25 @@ func (s *Subscriber) Subscribe(subject string) error {
 		err := json.Unmarshal(msg.Data, &order)
 		if err != nil {
 			s.logger.Error("Failed to unmarshal order", slog.String("error", err.Error()))
-			msg.Nak()
+			msg.Nak() //retry
 			return
 		}
 
 		err = s.service.CreateOrder(&order)
 		if err != nil {
-			s.logger.Error("Failed to create order", slog.String("error", err.Error()))
-			msg.Nak() // rewrite message for error
+			if _, ok := err.(validator.ValidationErrors); ok {
+				s.logger.Error("Validation failed for order", slog.String("error", err.Error()))
+				msg.Ack()
+			} else {
+				s.logger.Error("Failed to create order", slog.String("error", err.Error()))
+				msg.Nak()
+			}
 			return
 		}
 
 		s.logger.Info("Order processed", slog.String("orderID", order.OrderUID))
 		msg.Ack()
-	}, nats.DeliverNew(), nats.ManualAck(), nats.AckWait(30*time.Second), nats.MaxDeliver(5)) // retries
+	}, nats.DeliverNew(), nats.ManualAck(), nats.AckWait(10*time.Second), nats.MaxDeliver(3)) // retries
 
 	if err != nil {
 		return fmt.Errorf("failed to subscribe: %w", err)

@@ -91,7 +91,7 @@ func (s *OrderService) CreateOrder(order *domain.Order) error {
 		s.logger.Error("Invalid order data",
 			slog.String("error", err.Error()),
 			slog.String("orderID", order.OrderUID))
-		return fmt.Errorf("invalid order data: %w", err)
+		return err
 	}
 
 	if err := s.repo.SaveOrder(order); err != nil {

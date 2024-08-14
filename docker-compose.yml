@@ -20,7 +20,7 @@ services:
     image: migrate/migrate
     volumes:
       - ./migrations:/migrations
-    entrypoint: ["migrate", "-path=/migrations", "-database=postgres://wbuser:123@postgres:5432/wbdatabase?sslmode=disable", "down"]
+    entrypoint: ["migrate", "-path=/migrations", "-database=postgres://wbuser:123@postgres:5432/wbdatabase?sslmode=disable", "up"]
     depends_on:
       postgres:
         condition: service_healthy
