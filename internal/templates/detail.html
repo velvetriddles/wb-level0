@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .info-item {
+            margin: 5px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .items-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .item-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .item-detail {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order Detail</h1>
+    
+    <div class="section">
+        <h2>General Information</h2>
+        <div class="info-grid">
+            <div class="info-item"><strong>Order ID:</strong> {{.OrderUID}}</div>
+            <div class="info-item"><strong>Track Number:</strong> {{.TrackNumber}}</div>
+            <div class="info-item"><strong>Entry:</strong> {{.Entry}}</div>
+            <div class="info-item"><strong>Locale:</strong> {{.Locale}}</div>
+            <div class="info-item"><strong>Internal Signature:</strong> {{.InternalSignature}}</div>
+            <div class="info-item"><strong>Customer ID:</strong> {{.CustomerID}}</div>
+            <div class="info-item"><strong>Delivery Service:</strong> {{.DeliveryService}}</div>
+            <div class="info-item"><strong>Shardkey:</strong> {{.Shardkey}}</div>
+            <div class="info-item"><strong>SM ID:</strong> {{.SmID}}</div>
+            <div class="info-item"><strong>Date Created:</strong> {{.DateCreated}}</div>
+            <div class="info-item"><strong>OOF Shard:</strong> {{.OofShard}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Delivery</h2>
+        <div class="info-grid">
+            <div class="info-item"><strong>Name:</strong> {{.Delivery.Name}}</div>
+            <div class="info-item"><strong>Phone:</strong> {{.Delivery.Phone}}</div>
+            <div class="info-item"><strong>Zip:</strong> {{.Delivery.Zip}}</div>
+            <div class="info-item"><strong>City:</strong> {{.Delivery.City}}</div>
+            <div class="info-item"><strong>Address:</strong> {{.Delivery.Address}}</div>
+            <div class="info-item"><strong>Region:</strong> {{.Delivery.Region}}</div>
+            <div class="info-item"><strong>Email:</strong> {{.Delivery.Email}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Payment</h2>
+        <div class="info-grid">
+            <div class="info-item"><strong>Transaction:</strong> {{.Payment.Transaction}}</div>
+            <div class="info-item"><strong>Request ID:</strong> {{.Payment.RequestID}}</div>
+            <div class="info-item"><strong>Currency:</strong> {{.Payment.Currency}}</div>
+            <div class="info-item"><strong>Provider:</strong> {{.Payment.Provider}}</div>
+            <div class="info-item"><strong>Amount:</strong> {{.Payment.Amount}}</div>
+            <div class="info-item"><strong>Payment Date:</strong> {{.Payment.PaymentDt}}</div>
+            <div class="info-item"><strong>Bank:</strong> {{.Payment.Bank}}</div>
+            <div class="info-item"><strong>Delivery Cost:</strong> {{.Payment.DeliveryCost}}</div>
+            <div class="info-item"><strong>Goods Total:</strong> {{.Payment.GoodsTotal}}</div>
+            <div class="info-item"><strong>Custom Fee:</strong> {{.Payment.CustomFee}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Items</h2>
+        <ul class="items-list">
+        {{range .Items}}
+            <li class="item">
+                <div class="item-name">Name: {{.Name}}</div>
+                <div class="item-details">
+                    <div class="item-detail"><strong>ChrtID:</strong> {{.ChrtID}}</div>
+                    <div class="item-detail"><strong>Track Number:</strong> {{.TrackNumber}}</div>
+                    <div class="item-detail"><strong>Price:</strong> {{.Price}}</div>
+                    <div class="item-detail"><strong>RID:</strong> {{.RID}}</div>
+                    <div class="item-detail"><strong>Sale:</strong> {{.Sale}}</div>
+                    <div class="item-detail"><strong>Size:</strong> {{.Size}}</div>
+                    <div class="item-detail"><strong>Total Price:</strong> {{.TotalPrice}}</div>
+                    <div class="item-detail"><strong>NmID:</strong> {{.NmID}}</div>
+                    <div class="item-detail"><strong>Brand:</strong> {{.Brand}}</div>
+                    <div class="item-detail"><strong>Status:</strong> {{.Status}}</div>
+                </div>
+            </li>
+        {{end}}
+        </ul>
+    </div>
+
+    <button onclick="backToList()">Back to List</button>
+
+    <script>
+        function backToList() {
+            window.location.href = '/orders';
+        }
+    </script>
+</body>
+</html>

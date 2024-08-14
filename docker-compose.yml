@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: WBpostgres
+    environment:
+      POSTGRES_USER: wbuser
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: wbdatabase
+    ports:
+      - "5430:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wbuser -d wbdatabase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - ./migrations:/migrations
+    entrypoint: ["migrate", "-path=/migrations", "-database=postgres://wbuser:123@postgres:5432/wbdatabase?sslmode=disable", "down"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nats:
+    image: nats:latest
+    command: ["-js"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - nats_data:/data
+    environment:
+      - NATS_SERVER_NAME=nats-server
+      - NATS_CLUSTER_NAME=nats-cluster
+    healthcheck:
+      test: ["CMD", "nats-server", "--version"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+volumes:
+  pgdata:
+  nats_data:

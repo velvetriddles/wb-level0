@@ -1,0 +1,4 @@
+database_url: "postgresql://wbuser:123@localhost:5430/wbdatabase?sslmode=disable"
+nats_url: "nats://localhost:4222"
+nats_subject: "orders.new"
+http_port: ":8080"
